@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A practical C# cheat sheet for learning classes, properties, methods, access modifiers, exceptions, and core syntax." />
+  <title>C# Practical Cheat Sheet</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+      --accent-2: #34d399;
+      --border: #374151;
+      --code: #0b1220;
+      --danger: #fca5a5;
+      --warning: #fcd34d;
+      --max: 1100px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #0b1020 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 1rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    nav {
+      display: flex;
+      gap: .7rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    nav a:hover { color: var(--text); }
+
+    main {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    .hero {
+      padding: 2rem 0 1rem;
+    }
+
+    .hero h1 {
+      margin: 0 0 .6rem;
+      font-size: clamp(2rem, 6vw, 4rem);
+      line-height: 1.05;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 760px;
+      font-size: 1.05rem;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: .6rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      padding: .35rem .7rem;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    section {
+      margin-top: 2.25rem;
+      scroll-margin-top: 90px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: .7rem;
+    }
+
+    h3 {
+      margin-top: 1.4rem;
+      font-size: 1.1rem;
+    }
+
+    .card {
+      background: rgba(17, 24, 39, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      margin: .85rem 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .term {
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+
+    .muted { color: var(--muted); }
+
+    pre {
+      overflow-x: auto;
+      background: var(--code);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 10px;
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    :not(pre) > code {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: .1rem .35rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: .8rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: .7rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th { color: var(--accent); }
+
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: rgba(96, 165, 250, .08);
+      padding: .9rem 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    .machine {
+      border-left-color: var(--accent-2);
+      background: rgba(52, 211, 153, .08);
+    }
+
+    .warning {
+      border-left-color: var(--warning);
+      background: rgba(252, 211, 77, .08);
+    }
+
+    .danger {
+      border-left-color: var(--danger);
+      background: rgba(252, 165, 165, .08);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    footer {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 1.25rem 3rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    @media (max-width: 700px) {
+      .header-inner {
+        align-items: flex-start;
+      }
+
+      nav {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">C# Practical Cheat Sheet</div>
+      <nav aria-label="Primary">
+        <a href="#naming">Naming</a>
+        <a href="#access">Access</a>
+        <a href="#members">Members</a>
+        <a href="#properties">Properties</a>
+        <a href="#static">Static</a>
+        <a href="#exceptions">Exceptions</a>
+        <a href="#methods">Methods</a>
+        <a href="#mental-model">Mental Model</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>C# Practical Cheat Sheet</h1>
+      <p>
+        A compact reference for the parts of C# that are easy to forget while learning:
+        naming, access modifiers, properties, methods, exceptions, constructors, and the
+        difference between instance and static members.
+      </p>
+      <div class="pill-row">
+        <span class="pill">Page 1</span>
+        <span class="pill">Classes &amp; Members</span>
+        <span class="pill">Properties</span>
+        <span class="pill">Exceptions</span>
+        <span class="pill">Automation-friendly examples</span>
+      </div>
+    </div>
+
+    <section id="naming">
+      <h2>Naming conventions</h2>
+      <div class="card">
+        <pre><code>public class Forklift
+{
+    private int _speed;
+    private static int s_forkliftCount;
+
+    public int Speed { get; set; }
+
+    public void StartMotor() { }
+}</code></pre>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Style</th>
+              <th>Usually used for</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>PascalCase</code></td>
+              <td>Classes, methods, properties</td>
+              <td><code>ForkliftController</code>, <code>StartMotor()</code></td>
+            </tr>
+            <tr>
+              <td><code>camelCase</code></td>
+              <td>Local variables, parameters</td>
+              <td><code>currentSpeed</code>, <code>operatorName</code></td>
+            </tr>
+            <tr>
+              <td><code>_camelCase</code></td>
+              <td>Private instance fields</td>
+              <td><code>_motorTemperature</code></td>
+            </tr>
+            <tr>
+              <td><code>s_camelCase</code></td>
+              <td>Private static fields</td>
+              <td><code>s_totalForklifts</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="access">
+      <h2>Access modifiers</h2>
+      <p class="muted">Think: <strong>who is allowed to access this?</strong></p>
+
+      <div class="grid">
+        <div class="card"><span class="term">public</span><br />Accessible from outside the class.</div>
+        <div class="card"><span class="term">private</span><br />Only accessible inside the same class.</div>
+        <div class="card"><span class="term">protected</span><br />Accessible in the class and derived classes.</div>
+        <div class="card"><span class="term">internal</span><br />Accessible inside the same assembly.</div>
+        <div class="card"><span class="term">protected internal</span><br />Same assembly OR a derived class elsewhere.</div>
+        <div class="card"><span class="term">private protected</span><br />Same assembly AND the same/derived class.</div>
+      </div>
+
+      <div class="callout">
+        For now, the big two are:
+        <strong>public = outside code can use it</strong> and
+        <strong>private = only this class can use it</strong>.
+      </div>
+    </section>
+
+    <section id="members">
+      <h2>Fields vs properties vs methods</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Field</h3>
+          <p>Stores data.</p>
+          <pre><code>private int _speed;</code></pre>
+        </div>
+
+        <div class="card">
+          <h3>Property</h3>
+          <p>Controls access to data.</p>
+          <pre><code>public int Speed { get; set; }</code></pre>
+        </div>
+
+        <div class="card">
+          <h3>Method</h3>
+          <p>Performs an action.</p>
+          <pre><code>public void Start()
+{
+    Console.WriteLine("Machine started");
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="callout machine">
+        <strong>Automation analogy:</strong><br />
+        field = internal machine state<br />
+        property = exposed value/tag<br />
+        method = command/function
+      </div>
+    </section>
+
+    <section id="properties">
+      <h2>Properties</h2>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Read + write</h3>
+          <pre><code>public int Speed { get; set; }</code></pre>
+          <p>Outside code can both read and change the value.</p>
+        </div>
+
+        <div class="card">
+          <h3>Public read, private write</h3>
+          <pre><code>public int Speed { get; private set; }</code></pre>
+          <p>Outside code can read it, but only the class itself can change it.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Read-only property</h3>
+        <pre><code>public string SerialNumber { get; }
+
+public Forklift(string serialNumber)
+{
+    SerialNumber = serialNumber;
+}</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Full property with validation</h3>
+        <pre><code>private int _speed;
+
+public int Speed
+{
+    get => _speed;
+
+    set
+    {
+        if (value &lt; 0 || value &gt; 20)
+        {
+            throw new ArgumentOutOfRangeException(nameof(value));
+        }
+
+        _speed = value;
+    }
+}</code></pre>
+        <p><code>value</code> is the new value someone is trying to assign.</p>
+      </div>
+
+      <div class="callout machine">
+        <strong>Think of validation as an interlock.</strong> Outside code asks for a value;
+        the class decides whether that value is allowed.
+      </div>
+    </section>
+
+    <section id="constructors">
+      <h2>Constructors</h2>
+      <p>A constructor runs when you create an object with <code>new</code>.</p>
+
+      <pre><code>public class Forklift
+{
+    public string SerialNumber { get; }
+
+    public Forklift(string serialNumber)
+    {
+        SerialNumber = serialNumber;
+    }
+}
+
+Forklift truck = new Forklift("FL-001");</code></pre>
+
+      <div class="callout">
+        Constructor rules: same name as the class, no return type, runs during object creation.
+      </div>
+    </section>
+
+    <section id="expression">
+      <h2><code>=&gt;</code> expression-bodied syntax</h2>
+
+      <p>This:</p>
+      <pre><code>public int GetSpeed() =&gt; _speed;</code></pre>
+
+      <p>is a shorter version of:</p>
+      <pre><code>public int GetSpeed()
+{
+    return _speed;
+}</code></pre>
+
+      <p>Likewise:</p>
+      <pre><code>public Forklift(string name) =&gt; Name = name;</code></pre>
+
+      <div class="callout">
+        For now, think of <code>=&gt;</code> as:
+        <strong>“do or return this one simple thing.”</strong>
+      </div>
+    </section>
+
+    <section id="static">
+      <h2>Instance vs static</h2>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Instance member</h3>
+          <pre><code>private int _speed;</code></pre>
+          <p>Each object gets its own copy.</p>
+        </div>
+
+        <div class="card">
+          <h3>Static member</h3>
+          <pre><code>private static int s_forkliftCount;</code></pre>
+          <p>Shared by the class rather than belonging to one object.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>instance = this machine</strong><br />
+        <strong>static = the class / all machines</strong>
+      </div>
+    </section>
+
+    <section id="this">
+      <h2><code>this</code></h2>
+      <p><code>this</code> means the current object.</p>
+
+      <pre><code>private string _name;
+
+public Forklift(string name)
+{
+    this._name = name;
+}</code></pre>
+
+      <p>Often the same code is simply written as:</p>
+
+      <pre><code>_name = name;</code></pre>
+    </section>
+
+    <section id="exceptions">
+      <h2>Common exceptions</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Exception</th>
+            <th>Use / meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>ArgumentException</code></td>
+            <td>The argument is invalid in a general sense.</td>
+          </tr>
+          <tr>
+            <td><code>ArgumentNullException</code></td>
+            <td>An argument that should contain an object is <code>null</code>.</td>
+          </tr>
+          <tr>
+            <td><code>ArgumentOutOfRangeException</code></td>
+            <td>The value exists but is outside the allowed range.</td>
+          </tr>
+          <tr>
+            <td><code>InvalidOperationException</code></td>
+            <td>The action is normally valid, but not in the object's current state.</td>
+          </tr>
+          <tr>
+            <td><code>NullReferenceException</code></td>
+            <td>Your code tried to use an object reference that is <code>null</code>.</td>
+          </tr>
+          <tr>
+            <td><code>IndexOutOfRangeException</code></td>
+            <td>Your code tried to access an array index that does not exist.</td>
+          </tr>
+          <tr>
+            <td><code>DivideByZeroException</code></td>
+            <td>Integer code attempted to divide by zero.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card">
+        <h3>Examples</h3>
+        <pre><code>if (name == null)
+{
+    throw new ArgumentNullException(nameof(name));
+}
+
+if (speed &lt; 0 || speed &gt; 20)
+{
+    throw new ArgumentOutOfRangeException(nameof(speed));
+}
+
+if (!_engineRunning)
+{
+    throw new InvalidOperationException(
+        "Cannot drive while engine is stopped."
+    );
+}</code></pre>
+      </div>
+
+      <div class="callout warning">
+        <strong>Quick guide:</strong><br />
+        bad argument → <code>ArgumentException</code><br />
+        null argument → <code>ArgumentNullException</code><br />
+        outside limits → <code>ArgumentOutOfRangeException</code><br />
+        wrong machine/object state → <code>InvalidOperationException</code>
+      </div>
+    </section>
+
+    <section id="nameof">
+      <h2><code>nameof</code></h2>
+
+      <p>Prefer this:</p>
+      <pre><code>throw new ArgumentNullException(nameof(name));</code></pre>
+
+      <p>over manually typing the variable name as a string:</p>
+      <pre><code>throw new ArgumentNullException("name");</code></pre>
+
+      <p class="muted">If the variable gets renamed later, <code>nameof</code> stays safer and clearer.</p>
+    </section>
+
+    <section id="methods">
+      <h2>Methods, parameters, and arguments</h2>
+
+      <div class="card">
+        <h3>Method with no return value</h3>
+        <pre><code>public void StartMotor()
+{
+    Console.WriteLine("Starting motor");
+}</code></pre>
+        <p><code>void</code> means the method returns no value.</p>
+      </div>
+
+      <div class="card">
+        <h3>Method that returns a value</h3>
+        <pre><code>public int GetSpeed()
+{
+    return _speed;
+}</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Parameter vs argument</h3>
+        <pre><code>public void SetSpeed(int speed)
+{
+    _speed = speed;
+}
+
+machine.SetSpeed(10);</code></pre>
+        <p>
+          <strong>parameter</strong> = <code>speed</code> in the method definition<br />
+          <strong>argument</strong> = <code>10</code> passed into the method
+        </p>
+      </div>
+    </section>
+
+    <section id="objects">
+      <h2>Classes and objects</h2>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Class</h3>
+          <pre><code>public class Forklift
+{
+}</code></pre>
+          <p>Think: blueprint / design.</p>
+        </div>
+
+        <div class="card">
+          <h3>Object</h3>
+          <pre><code>Forklift truck = new Forklift();</code></pre>
+          <p>Think: actual machine built from the blueprint.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="mental-model">
+      <h2>Main mental model</h2>
+
+      <div class="grid">
+        <div class="card">
+          <span class="term">FIELDS</span>
+          <p>What information does this object store?</p>
+        </div>
+        <div class="card">
+          <span class="term">PROPERTIES</span>
+          <p>What information can outside code see or change?</p>
+        </div>
+        <div class="card">
+          <span class="term">METHODS</span>
+          <p>What actions can this object perform?</p>
+        </div>
+        <div class="card">
+          <span class="term">PUBLIC</span>
+          <p>What am I exposing to the outside world?</p>
+        </div>
+        <div class="card">
+          <span class="term">PRIVATE</span>
+          <p>What am I keeping inside the control cabinet?</p>
+        </div>
+        <div class="card">
+          <span class="term">STATIC</span>
+          <p>Does this belong to one object, or the class as a whole?</p>
+        </div>
+        <div class="card">
+          <span class="term">EXCEPTIONS</span>
+          <p>What situations should this code refuse to allow?</p>
+        </div>
+      </div>
+
+      <div class="callout machine">
+        <strong>Automation shorthand</strong><br /><br />
+        public property ≈ HMI-visible/tag-accessible value<br />
+        private field ≈ internal machine state<br />
+        method ≈ command/function<br />
+        private setter ≈ observable externally, changed internally<br />
+        validation ≈ limits/interlocks<br />
+        exception ≈ “this operation is not permitted”
+      </div>
+    </section>
+
+    <section id="next">
+      <h2>Future Page 2 ideas</h2>
+      <p class="muted">
+        Good candidates as the course progresses: inheritance, interfaces, collections,
+        method overloading, <code>ref</code>/<code>out</code>, extension methods, nullable types,
+        LINQ, async/await, and common debugging patterns.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    Built as a simple single-file reference so it can be hosted directly with GitHub Pages.
+  </footer>
+</body>
+</html>
